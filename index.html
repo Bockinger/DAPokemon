@@ -12,15 +12,17 @@
   <script src="main.js"></script>
 </head>
 
-<body>
-  <nav class="navbar bg-body-tertiary ">
-    <div class="container-fluid">
+<body onload="init()">
+  <nav class="navbar bg-body-tertiary fixed-top">
+    <div class="container-fluid ">
       <img src="assets/PokemonNav.svg" alt="Bootstrap" width="200" height="75">
       <form class="d-flex" role="search">
         <input class="form-control me-5" type="search" placeholder="Search" aria-label="Search">
       </form>
     </div>
   </nav>
+
+  <span id="loader" class="loader"></span>
 
 
   <div class="container">
@@ -272,7 +274,11 @@
 
 
     </div>
+    <div class="text-center mt-5  ">
+      <button type="button" class="btn btn-warning mt-5 mb-5 " style="width: 200px;">Next</button>
+    </div>
   </div>
+
 
 
 

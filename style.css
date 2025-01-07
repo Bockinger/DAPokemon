@@ -6,7 +6,7 @@
 
 .form-control:focus {
   border-style: none;
-  box-shadow: 0 0 0 0.25rem rgba(255, 203, 5, 1);
+  box-shadow: 0 0 0 0.25rem #ffcb05;
 }
 
 .container {
@@ -14,44 +14,42 @@
   top: 100px;
 }
 
+
 .loader {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: inline-block;
-  position: fixed;
-  top: 450px;
-  left: calc(100% / 2);
-  box-sizing: border-box;
-  animation: rotation 1s linear infinite;
-  z-index: 1;
-}
-
-.loader::after {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  content: "loading...";
-  box-sizing: border-box;
-  position: relative;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 5px solid;
-  border-color: #FF3D00 transparent;
+  position: fixed;
+  top: 320px;
+  left: calc(100% / 2);
+  width: 66px;
+  height: 66px;
+  background-image:
+    linear-gradient(#ffcb05 16px, transparent 0),
+    linear-gradient(#FF3D00 16px, transparent 0),
+    linear-gradient(#FF3D00 16px, transparent 0),
+    linear-gradient(#ffcb05 16px, transparent 0);
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: left top, left bottom, right top, right bottom;
+  animation: rotate 1s linear infinite;
+  z-index: 2;
 }
 
-@keyframes rotation {
-
+@keyframes rotate {
   0% {
-    transform: rotate(0deg);
+    width: 64px;
+    height: 64px;
+    transform: rotate(0deg)
+  }
+
+  50% {
+    width: 30px;
+    height: 30px;
+    transform: rotate(180deg)
   }
 
   100% {
-    transform: rotate(360deg);
+    width: 64px;
+    height: 64px;
+    transform: rotate(360deg)
   }
 }

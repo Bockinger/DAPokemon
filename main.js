@@ -1,166 +1,155 @@
+let basisUrl = "https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0";
+let pokeFirstURL = "https://pokeapi.co/api/v2/pokemon/"
 
-//https://pokeapi.co/api/v2/pokemon/1/       &offset=0
 
-let basisUrl = "";
-let DataBaseAPI = "https://pokeapi.co/api/v2/pokemon?limit=";
-let DetailUrl = "https://pokeapi.co/api/v2/pokemon/";
-let PokemonAllName = [];
-let DataBaseAPInext = "";
-let PokId = 0;
+let pokeArrayAll = [];
+let pokeArraysingle = [];
+let pokemonsLoad = 24;
+let pokeLoadMax = 0;
+let pokeIndexAkt = 0;
+let pokeSelection = [];
+
+let colorCardList =
+{
+  grass: "#78C850",
+  fire: "#F08030",
+  wate: "#6890F0",
+  bug: "#A8B820",
+  normal: "#A8A878",
+  poison: "#A040A0",
+  electric: "#F8D030",
+  ground: "#E0C068",
+  flying: '#A890F0',
+  ice: '#98D8D8',
+  fighting: '#C03028',
+  psychic: '#F85888',
+  dark: '#705848',
+  fairy: '#F0B6BC',
+  rock: '#B8A038',
+  bug: '#A8B820',
+  dragon: '#7038F8',
+  ghost: '#705898',
+  steel: '#B8B8D0',
+}
+
+
 
 
 function init() {
+  eventListener();
+  loadAPIAllIndex();
+  pokeNextSelection();
+}
+
+async function loadAPIAllIndex() {
+  let responeAllpoke = await fetch(basisUrl);
+  pokeArrayAll = (await responeAllpoke.json());
+  console.log("AllPoket ", pokeArrayAll);
+}
+
+
+function searchPokemon() {
+  let searchString = document.getElementById('searchField').value.trim();
+  if (searchString.length < 3) {
+    return;
+  }
+  document.getElementById('btnnext').style.display = 'none';
+  let resultPokeSearch = [];
+  let pokeSearch = pokeArrayAll.results.filter(p => p.name.toLowerCase().startsWith(searchString.toLowerCase()));
+  console.log("Gefunden Arra", pokeSearch);
+  pokeSearch.map(p => {
+    let id = p.url.split("/").filter(part => part).pop();
+    resultPokeSearch.push(id);
+  });
+  document.getElementById('poketCard').innerHTML = "";
+  loadPokeSelect(resultPokeSearch);
+}
+
+
+
+function pokeNextSelection() {
+  pokeSelection = [];
+  let pokeIndexOld = pokeIndexAkt;
+  pokeLoadMax = pokeLoadMax + pokemonsLoad;
+  pokeIndexAkt = pokeIndexAkt + pokemonsLoad;
+  console.log("IndexAktuell", pokeIndexAkt);
+  console.log("polemonmax", pokeLoadMax);
+  for (i = pokeIndexOld; i < pokeLoadMax; i++) {
+    pokeSelection.push(i + 1);
+  }
+  console.log("pokeSelection == ", pokeSelection);
+  loadPokeSelect(pokeSelection);
   document.getElementById('btnnext').style.display = 'flex';
-  loader(false);
-  PokeAPIAllData();
-  dataPokemonReadAPI(DataBaseAPI, false, 4);
 }
 
 
-function PokeAPIAllData() {
-  //lade alle Pokemon
-  let dataAll = dataPokemonReadAPI(DataBaseAPI, true, 1500);
-  console.log("Alle daten ", dataAll);
-}
-
-async function dataPokemonReadAPI(pfadAPI, search, pokeLimit) {
+async function loadPokeSelect(pokeSelec) {
   loader(true);
   try {
+    const pokets = pokeSelec.map(id => `${pokeFirstURL}${id}`);
+    let fetchPromis = pokets.map(singleURL => fetch(singleURL).then(Poketresponse => {
+      return Poketresponse.json();
+    }));
+    pokeArraysingle = await Promise.all(fetchPromis)
 
-
-    let response = await fetch(`${pfadAPI}${pokeLimit}${" & offset=0"}`);
-    if (!response.status == "200") {
-      console.log("Daten fehlgescxjlage");
-    }
-    let data = (await response.json());
-    console.log("data ", data);
-
-    if (search) {
-      console.log("Starte alle");
-      loader(false);
-      return data;
-    }
-
-    DataBaseAPInext = data.next;
-    console.log("Next Load = ", DataBaseAPInext);
-    let pokeData = data.results;
-    let pokleng = pokeData.length;
-    console.log("PokeData ", pokeData);
-    PokId = PokId + pokeLimit
-    console.log("PokId = ", PokId);
-
-    pokemonData(pokeData, PokId, pokeLimit);
-
-
-  } catch (error) {
-    console.log("Fehler beim Laden ", error);
+  } catch {
+    console.log("Fehler beim abrufen der Daten");
   } finally {
-    console.log("Daten holen abgeschlossen");
+    console.log("Finally");
+    renderPokeCard(pokeArraysingle);
   }
 }
 
 
-async function pokemonData(data, NewId, pokeLimit) {
-
-  console.log("NEW Id = ", NewId);
-  let data1;
-  let IdPokemon = NewId - pokeLimit;
-  console.log("PockemonId =  ", IdPokemon);
-
-
-
-  for (i = 0; i < pokeLimit; i++) {
-    data1 = await pokemonReadDetail(IdPokemon + 1);
-    console.log("Responde Detail ", data1);
-    console.log("Zähler i =", i);
-    IdPokemon++
-    let typesArr = typeCheck(data1);
-    PokemonAllName.push({
-      "id": IdPokemon,
-      "name": data[i].name,
-      "height": data1.height,
-      "weight": data1.weight,
-      "type1": typesArr[0],
-      "type2": typesArr[1],
-      "img": data1.sprites.front_default
-    })
-
-    console.log("IMG ", PokemonAllName[i].img);
-
-
-    renderPokeCard(PokemonAllName[i].img);
-  }
-
-  console.log("Pocket all Name ", PokemonAllName);
-
+function renderPokeCard(poketList) {
+  let i = -1;
+  let element = document.getElementById('poketCard');
+  let pokemonDetail = poketList.map(pokemon => {
+    i = i + 1
+    console.log(i);
+    let img = pokeArraysingle[i].sprites.other.home.front_default;
+    let pokType = typeCheck(pokemon);
+    let colorCard = colorCardCheck(pokType[0]);
+    element.innerHTML += templatePokeCard(pokemon, img, pokType, colorCard)
+  })
+  document.getElementById('btnnext').classList.remove('d-none');
   loader(false);
 }
 
 
-
-async function pokemonReadDetail(id) {
-  let urlDetail = `${DetailUrl}${id}${"/"}`;
-  try {
-    console.log("Detail URL ", urlDetail)
-    let responseDetail = await fetch(urlDetail);
-    if (!responseDetail.status == "200") {
-      console.log("Daten fehlgescxjlage");
-    } else {
-      let data = (await responseDetail.json());
-      return data;
-    }
-  } catch (error) {
-    console.log("Fehler beim Detail Fetch ", error);
-  } finally {
-    console.log("Zusatzsdatebn wurden geholt");
-  }
-}
-
-
-
-function typeCheck(data1) {
-  let typesLenght = data1.types.filter(item => item.hasOwnProperty('slot')).length;
+function typeCheck(Poklist) {
+  let typesLenght = Poklist.types.filter(item => item.hasOwnProperty('slot')).length;
   let typesArray = [];
   if (typesLenght > 1) {
-    return typesArray = [data1.types[0].type.name, data1.types[1].type.name];
+    return typesArray = [Poklist.types[0].type.name, Poklist.types[1].type.name];
   } else {
-    return typesArray = [data1.types[0].type.name, "0"];
+    return typesArray = [Poklist.types[0].type.name, "none"];
   }
 }
 
 
-
-
-
-function renderPokeCard(img) {
-  let element = document.getElementById('poketCard');
-
-  element.innerHTML += templatePokeCard(img);
-
+function colorCardCheck(type) {
+  let colorCode = colorCardList[type];
+  return colorCode;
 }
 
 
-function templatePokeCard(img) {
-
+function templatePokeCard(Poklist, img, typ, color) {
   return `
   <div class="col">
-    <div class="pCard">
+    <div class="pCard" style="background-color: ${color};">
       <div class="pCard_body"></div>
-      <p class="pCard_name">Name des Pooke</p>
-      <img class="pCard_img" src=${img}>
-        <span class="pCard_Id">1</span>
-        <div class="pCard_buttons">
-          <a class="pCard_btn" href="#">Grass</a>
-          <a class="pCard_btn" href="#">Poison</a>
+      <p class="pCard_name">${Poklist.name}</p>
+      <img id="pCard_img" class="pCard_img" src="${img}">
+        <span class="pCard_Id">${Poklist.id}</span>
+        <div  class="pCard_buttons">
+        <span id="test" class="pCard_btn">${typ[0]}</span>
+        <span style="display:${typ[1]}" id="test1" class="pCard_btn">${typ[1]}</span>
         </div>
-    </div>
+       </div>
   </div>
 `
 }
-
-
-
-
 
 
 function loader(aktiv) {
@@ -171,6 +160,19 @@ function loader(aktiv) {
   } else {
     element.style.display = "none";
     console.log("Loader deaktivirt");
-    console.log("Array ", PokemonAllName);
   }
+}
+
+function eventListener() {
+  document.getElementById('searchField').addEventListener("input", function (event) {
+    if (event.target.value === "") {
+      document.getElementById('poketCard').innerHTML = "";
+      let poketIDs = [];
+      for (let i = 1; i <= pokeIndexAkt; i++) {
+        poketIDs.push(i);
+      }
+      loadPokeSelect(poketIDs);
+      document.getElementById('btnnext').style.display = 'flex';
+    }
+  });
 }

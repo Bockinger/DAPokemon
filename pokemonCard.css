@@ -16,15 +16,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
 }
 
 .pCard_name {
+  font-size: 24px;
+  font-weight: bold;
   position: relative;
   top: 20px;
   margin-top: 10px;
   margin-bottom: 0;
-
 }
 
 .pCard_img {
@@ -70,7 +70,4 @@
   height: 40px;
   border-radius: 8px;
   background-color: aquamarine;
-
-
-
 }

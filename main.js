@@ -8,7 +8,6 @@ let pokemonsLoad = 24;
 let pokeLoadMax = 0;
 let pokeIndexAkt = 0;
 let pokeSelection = [];
-
 let colorCardList =
 {
   grass: "#78C850",
@@ -136,8 +135,8 @@ function colorCardCheck(type) {
 
 function templatePokeCard(Poklist, img, typ, color) {
   return `
-  <div class="col">
-    <div class="pCard" style="background-color: ${color};">
+  <div  class="col">
+    <div class="pCard" style="background-color: ${color};" onclick="pokeInfoDeatail(${Poklist.id})">
       <div class="pCard_body"></div>
       <p class="pCard_name">${Poklist.name}</p>
       <img id="pCard_img" class="pCard_img" src="${img}">
@@ -149,6 +148,18 @@ function templatePokeCard(Poklist, img, typ, color) {
        </div>
   </div>
 `
+}
+
+function pokeInfoDeatail(id) {
+  console.log("Card mit Nummer ", id);
+  noneOrflexDisplay([{ "lockoutDisplay": "flex" }, { "detailCard": "flex" }])
+  document.getElementById('body').style.overflow = 'hidden';
+}
+
+
+function closeDetailCard() {
+  noneOrflexDisplay([{ "lockoutDisplay": "none" }, { "detailCard": "none" }])
+  document.getElementById('body').style.overflow = 'auto';
 }
 
 
@@ -173,6 +184,15 @@ function eventListener() {
       }
       loadPokeSelect(poketIDs);
       document.getElementById('btnnext').style.display = 'flex';
+
     }
   });
+}
+
+
+function noneOrflexDisplay(element = []) {
+  element.map(u => {
+    const [objekt, value] = Object.entries(u)[0];
+    document.getElementById(objekt).style.display = value;
+  })
 }

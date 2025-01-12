@@ -1,6 +1,7 @@
 .navbar {
   height: 100px;
   background-color: aquamarine !important;
+  z-index: 4;
 }
 
 
@@ -32,6 +33,7 @@
   background-position: left top, left bottom, right top, right bottom;
   animation: rotate 1s linear infinite;
   z-index: 5;
+
 }
 
 @keyframes rotate {

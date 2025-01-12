@@ -9,10 +9,68 @@
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="pokemonCard.css">
+  <link rel="stylesheet" href="pokemonDetailCard.css">
   <script src="main.js"></script>
 </head>
 
-<body onload="init()">
+<body id="body" onload="init()">
+
+
+
+  <div id="detailCard" class="Detail_Card">
+    <div class="detail_Card_Header">
+      <spam>charmander</spam>
+      <img class="img_Pokemon" src="/assets/testPok.png">
+
+      <img class="close_Button" src="/assets/close.svg">
+    </div>
+    <hr>
+    <div class="detail_Card_Menu">
+      <a href="#">About</a>
+      <a href="#">Base Stats</a>
+    </div>
+
+
+    <div class="detail_Card_Infos">
+
+
+      <div class="Card_Detail_About">
+        <p>Height</p>
+        <p>weight</p>
+        <p>bas expensio</p>
+        <p>Spiezis</p>
+        <p>Abilifix</p>
+      </div>
+
+      <div class="Card_Detail_BaseStats">
+        <div class="progress_Bar">
+
+          <p>hp</p>
+        </div>
+
+      </div>
+
+
+
+    </div>
+
+
+
+
+
+
+    <hr>
+    <div class="detail_Card_footer">
+      <img src="/assets/back.svg">
+      <img src="/assets/forward.svg">
+    </div>
+  </div>
+
+
+
+  <div onclick="closeDetailCard()" id="lockoutDisplay" class="lockout_Display"></div>
+
+
   <nav class="navbar bg-body-tertiary fixed-top">
     <div class="container-fluid ">
       <img src="assets/PokemonNav.svg" alt="Bootstrap" width="200" height="75">

@@ -1,8 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+  border: 0 solid transparent;
+  font-family: "Roboto", sans-serif;
+  text-decoration: none;
+  scroll-behavior: smooth;
+}
+
+
 .navbar {
   height: 100px;
   background-color: aquamarine !important;
   z-index: 4;
 }
+
 
 
 .form-control:focus {

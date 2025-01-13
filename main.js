@@ -136,7 +136,7 @@ function colorCardCheck(type) {
 function templatePokeCard(Poklist, img, typ, color) {
   return `
   <div  class="col">
-    <div class="pCard" style="background-color: ${color};" onclick="pokeInfoDeatail(${Poklist.id})">
+    <div class="pCard" style="background-color: ${color};" onclick="pokeInfoDetail(${Poklist.id})">
       <div class="pCard_body"></div>
       <p class="pCard_name">${Poklist.name}</p>
       <img id="pCard_img" class="pCard_img" src="${img}">
@@ -150,10 +150,12 @@ function templatePokeCard(Poklist, img, typ, color) {
 `
 }
 
-function pokeInfoDeatail(id) {
+function pokeInfoDetail(id) {
   console.log("Card mit Nummer ", id);
   noneOrflexDisplay([{ "lockoutDisplay": "flex" }, { "detailCard": "flex" }])
   document.getElementById('body').style.overflow = 'hidden';
+  renderPokemonDetailCard(id);
+
 }
 
 
@@ -195,4 +197,83 @@ function noneOrflexDisplay(element = []) {
     const [objekt, value] = Object.entries(u)[0];
     document.getElementById(objekt).style.display = value;
   })
+}
+
+
+function renderPokemonDetailCard(id) {
+
+
+  let element = document.getElementById('detailCard');
+  element.innerHTML = "";
+
+  element.innerHTML = templatePokemonDetailCard(id);
+}
+
+
+function templatePokemonDetailCard(id) {
+  id = id - 1
+  return `
+<div class="detail_Card_Header">
+      <spam>${pokeArraysingle[id].name}</spam>
+      <img class="img_Pokemon" src="${pokeArraysingle[id].sprites.other.home.front_default}">
+      <img onclick="closeDetailCard()" class="close_Button" src="/assets/close.svg">
+    </div>
+    <hr>
+    <div class="detail_Card_Menu">
+      <a href="#">About</a>
+      <a href="#">Base Stats</a>
+    </div>
+    <div class="detail_Card_Infos">
+      <div class="Card_Detail_About">
+      </div>
+      <div class="Card_Detail_BaseStats">
+        <div class="progress_Bar">
+          <table>
+            <tbody>
+              <tr>
+                <td>hp</td>
+                <td>${pokeArraysingle[id].stats[0].base_stat}</td>
+              </tr>
+              <tr>
+                <td>attack</td>
+                <td>${pokeArraysingle[id].stats[1].base_stat}</td>
+              </tr>
+               <tr>
+                <td>defense</td>
+                <td>${pokeArraysingle[id].stats[2].base_stat}</td>
+              </tr>
+
+               <tr>
+                <td>special-attack</td>
+                <td>${pokeArraysingle[id].stats[3].base_stat}</td>
+              </tr>
+
+               <tr>
+                <td>special-defense</td>
+                <td>${pokeArraysingle[id].stats[4].base_stat}</td>
+              </tr>
+               <tr>
+                <td>speed</td>
+                <td>${pokeArraysingle[id].stats[5].base_stat}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <div class="detail_Card_footer">
+      <img src="/assets/back.svg" onclick="pokeCardDeback(${id})">
+      <img src="/assets/forward.svg" onclick="renderPokemonDetailCard(${id + 2})">
+    </div>
+    `
+}
+
+
+function pokeCardDeback(id) {
+  if (id > 0) {
+    renderPokemonDetailCard(id);
+  } else {
+    return
+  }
 }

@@ -75,6 +75,7 @@ function pokeNextSelection() {
   console.log("polemonmax", pokeLoadMax);
   for (i = pokeIndexOld; i < pokeLoadMax; i++) {
     pokeSelection.push(i + 1);
+
   }
   console.log("pokeSelection == ", pokeSelection);
   loadPokeSelect(pokeSelection);
@@ -89,7 +90,13 @@ async function loadPokeSelect(pokeSelec) {
     let fetchPromis = pokets.map(singleURL => fetch(singleURL).then(Poketresponse => {
       return Poketresponse.json();
     }));
-    pokeArraysingle = await Promise.all(fetchPromis)
+
+
+    let altesArray = pokeArraysingle
+    let ArrayAuselen = await Promise.all(fetchPromis)
+    pokeArraysingle = altesArray.concat(ArrayAuselen);
+
+
 
   } catch {
     console.log("Fehler beim abrufen der Daten");
@@ -98,7 +105,6 @@ async function loadPokeSelect(pokeSelec) {
     renderPokeCard(pokeArraysingle);
   }
 }
-
 
 function renderPokeCard(poketList) {
   let i = -1;
@@ -201,72 +207,78 @@ function noneOrflexDisplay(element = []) {
 
 
 function renderPokemonDetailCard(id) {
-
-
   let element = document.getElementById('detailCard');
-  element.innerHTML = "";
 
+
+
+
+  element.innerHTML = "";
   element.innerHTML = templatePokemonDetailCard(id);
 }
 
 
 function templatePokemonDetailCard(id) {
   id = id - 1
+
+  console.log("Alle Array == ", pokeArraysingle);
+  console.log("Alle Array selection == ", pokeSelection);
   return `
-<div class="detail_Card_Header">
-      <spam>${pokeArraysingle[id].name}</spam>
-      <img class="img_Pokemon" src="${pokeArraysingle[id].sprites.other.home.front_default}">
-      <img onclick="closeDetailCard()" class="close_Button" src="/assets/close.svg">
-    </div>
-    <hr>
-    <div class="detail_Card_Menu">
-      <a href="#">About</a>
-      <a href="#">Base Stats</a>
-    </div>
-    <div class="detail_Card_Infos">
-      <div class="Card_Detail_About">
+  <div class="detail_Card_Header">
+        <spam>${pokeArraysingle[id].name}</spam>
+        <img class="img_Pokemon" src="${pokeArraysingle[id].sprites.other.home.front_default}">
+        <img onclick="closeDetailCard()" class="close_Button" src="./assets/close.svg">
       </div>
-      <div class="Card_Detail_BaseStats">
-        <div class="progress_Bar">
-          <table>
-            <tbody>
-              <tr>
-                <td>hp</td>
-                <td>${pokeArraysingle[id].stats[0].base_stat}</td>
-              </tr>
-              <tr>
-                <td>attack</td>
-                <td>${pokeArraysingle[id].stats[1].base_stat}</td>
-              </tr>
-               <tr>
-                <td>defense</td>
-                <td>${pokeArraysingle[id].stats[2].base_stat}</td>
-              </tr>
+      <hr>
+      <div class="detail_Card_Menu">
+        <a href="#">About</a>
+        <a href="#">Base Stats</a>
+      </div>
+      <div class="detail_Card_Infos">
+        <div class="Card_Detail_About">
+        </div>
+        <div class="Card_Detail_BaseStats">
+          <div class="progress_Bar">
+            <table>
+              <tbody>
+                <tr>
+                  <td>hp</td>
+                  <td>${pokeArraysingle[id].stats[0].base_stat}</td>
+                </tr>
+                <tr>
+                  <td>attack</td>
+                  <td>${pokeArraysingle[id].stats[1].base_stat}</td>
+                </tr>
+                 <tr>
+                  <td>defense</td>
+                  <td>${pokeArraysingle[id].stats[2].base_stat}</td>
+                </tr>
 
-               <tr>
-                <td>special-attack</td>
-                <td>${pokeArraysingle[id].stats[3].base_stat}</td>
-              </tr>
+                 <tr>
+                  <td>special-attack</td>
+                  <td>${pokeArraysingle[id].stats[3].base_stat}</td>
+                </tr>
 
-               <tr>
-                <td>special-defense</td>
-                <td>${pokeArraysingle[id].stats[4].base_stat}</td>
-              </tr>
-               <tr>
-                <td>speed</td>
-                <td>${pokeArraysingle[id].stats[5].base_stat}</td>
-              </tr>
-            </tbody>
-          </table>
+                 <tr>
+                  <td>special-defense</td>
+                  <td>${pokeArraysingle[id].stats[4].base_stat}</td>
+                </tr>
+                 <tr>
+                  <td>speed</td>
+                  <td>${pokeArraysingle[id].stats[5].base_stat}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-    <hr>
-    <div class="detail_Card_footer">
-      <img src="/assets/back.svg" onclick="pokeCardDeback(${id})">
-      <img src="/assets/forward.svg" onclick="renderPokemonDetailCard(${id + 2})">
-    </div>
-    `
+      <hr>
+      <div class="detail_Card_footer">
+        <img src="./assets/back.svg" onclick="pokeCardDeback(${id})">
+        <img src="./assets/forward.svg" onclick="renderPokemonDetailCard(${id + 2})">
+      </div>
+      `
+
+
 }
 
 

@@ -32,13 +32,12 @@ let colorCardList =
 }
 
 
-
-
 function init() {
   eventListener();
   loadAPIAllIndex();
   pokeNextSelection();
 }
+
 
 async function loadAPIAllIndex() {
   let responeAllpoke = await fetch(basisUrl);
@@ -61,9 +60,8 @@ function searchPokemon() {
     resultPokeSearch.push(id);
   });
   document.getElementById('poketCard').innerHTML = "";
-  loadPokeSelect(resultPokeSearch);
+  loadPokeSelect(resultPokeSearch, true);
 }
-
 
 
 function pokeNextSelection() {
@@ -75,34 +73,31 @@ function pokeNextSelection() {
   console.log("polemonmax", pokeLoadMax);
   for (i = pokeIndexOld; i < pokeLoadMax; i++) {
     pokeSelection.push(i + 1);
-
   }
   console.log("pokeSelection == ", pokeSelection);
+  document.getElementById('poketCard').innerHTML = "";
   loadPokeSelect(pokeSelection);
   document.getElementById('btnnext').style.display = 'flex';
 }
 
 
-async function loadPokeSelect(pokeSelec) {
+async function loadPokeSelect(pokeSelec, search) {
   loader(true);
   try {
     const pokets = pokeSelec.map(id => `${pokeFirstURL}${id}`);
     let fetchPromis = pokets.map(singleURL => fetch(singleURL).then(Poketresponse => {
       return Poketresponse.json();
     }));
-
-
-    let altesArray = pokeArraysingle
-    let ArrayAuselen = await Promise.all(fetchPromis)
-    pokeArraysingle = altesArray.concat(ArrayAuselen);
-
-
-
+    let ArrayRead = await Promise.all(fetchPromis)
+    if (search) {
+      renderPokeCard(ArrayRead);
+    } else {
+      let oldArray = pokeArraysingle
+      pokeArraysingle = oldArray.concat(ArrayRead);
+      renderPokeCard(pokeArraysingle);
+    }
   } catch {
     console.log("Fehler beim abrufen der Daten");
-  } finally {
-    console.log("Finally");
-    renderPokeCard(pokeArraysingle);
   }
 }
 
@@ -208,10 +203,6 @@ function noneOrflexDisplay(element = []) {
 
 function renderPokemonDetailCard(id) {
   let element = document.getElementById('detailCard');
-
-
-
-
   element.innerHTML = "";
   element.innerHTML = templatePokemonDetailCard(id);
 }
@@ -273,8 +264,8 @@ function templatePokemonDetailCard(id) {
       </div>
       <hr>
       <div class="detail_Card_footer">
-        <img src="./assets/back.svg" onclick="pokeCardDeback(${id})">
-        <img src="./assets/forward.svg" onclick="renderPokemonDetailCard(${id + 2})">
+        <img id="btnback" class="btn_DeCard" src="./assets/back.svg" onclick="pokeCardDeback(${id})">
+        <img id="btnforward" class="btn_DeCard" src="./assets/forward.svg" onclick="pokeCardDeforward(${id})">
       </div>
       `
 
@@ -284,8 +275,23 @@ function templatePokemonDetailCard(id) {
 
 function pokeCardDeback(id) {
   if (id > 0) {
+
     renderPokemonDetailCard(id);
   } else {
     return
   }
 }
+
+function pokeCardDeforward(id) {
+  if ((id + 1) == pokeIndexAkt) {
+    //pokeNextSelection();
+    console.log("Es m uss nachelfaen webdseb !!!")
+    //closeDetailCard();
+
+
+  } else {
+    renderPokemonDetailCard(id + 2);
+  }
+}
+//console.log("ID == ", id)
+//console.log("MAXId ==", pokeIndexAkt);

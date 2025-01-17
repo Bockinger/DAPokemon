@@ -4,10 +4,15 @@ let pokeFirstURL = "https://pokeapi.co/api/v2/pokemon/"
 
 let pokeArrayAll = [];
 let pokeArraysingle = [];
+
+let pokeArraySearch = [];
+
 let pokemonsLoad = 24;
 let pokeLoadMax = 0;
 let pokeIndexAkt = 0;
 let pokeSelection = [];
+let pokeSearchMode = false;
+
 let colorCardList =
 {
   grass: "#78C850",
@@ -81,7 +86,7 @@ function pokeNextSelection() {
 }
 
 
-async function loadPokeSelect(pokeSelec, search) {
+async function loadPokeSelect(pokeSelec, search, searchIds) {
   loader(true);
   try {
     const pokets = pokeSelec.map(id => `${pokeFirstURL}${id}`);
@@ -91,15 +96,20 @@ async function loadPokeSelect(pokeSelec, search) {
     let ArrayRead = await Promise.all(fetchPromis)
     if (search) {
       renderPokeCard(ArrayRead);
+      pokeArraySearch = ArrayRead;
+      pokeSearchMode = true;
     } else {
+      pokeSearchMode = false;
       let oldArray = pokeArraysingle
       pokeArraysingle = oldArray.concat(ArrayRead);
       renderPokeCard(pokeArraysingle);
+
     }
   } catch {
     console.log("Fehler beim abrufen der Daten");
   }
 }
+
 
 function renderPokeCard(poketList) {
   let i = -1;
@@ -137,7 +147,7 @@ function colorCardCheck(type) {
 function templatePokeCard(Poklist, img, typ, color) {
   return `
   <div  class="col">
-    <div class="pCard" style="background-color: ${color};" onclick="pokeInfoDetail(${Poklist.id})">
+    <div id="pCard" class="pCard" style="background-color: ${color};" onclick="pokeInfoDetail(${Poklist.id})">
       <div class="pCard_body"></div>
       <p class="pCard_name">${Poklist.name}</p>
       <img id="pCard_img" class="pCard_img" src="${img}">
@@ -152,6 +162,13 @@ function templatePokeCard(Poklist, img, typ, color) {
 }
 
 function pokeInfoDetail(id) {
+
+  if (pokeSearchMode) {
+    console.log("Diese Karte kann nicht geladen werden SearchMode");
+    // return
+  }
+
+
   console.log("Card mit Nummer ", id);
   noneOrflexDisplay([{ "lockoutDisplay": "flex" }, { "detailCard": "flex" }])
   document.getElementById('body').style.overflow = 'hidden';
@@ -177,20 +194,6 @@ function loader(aktiv) {
   }
 }
 
-function eventListener() {
-  document.getElementById('searchField').addEventListener("input", function (event) {
-    if (event.target.value === "") {
-      document.getElementById('poketCard').innerHTML = "";
-      let poketIDs = [];
-      for (let i = 1; i <= pokeIndexAkt; i++) {
-        poketIDs.push(i);
-      }
-      loadPokeSelect(poketIDs);
-      document.getElementById('btnnext').style.display = 'flex';
-
-    }
-  });
-}
 
 
 function noneOrflexDisplay(element = []) {
@@ -208,11 +211,16 @@ function renderPokemonDetailCard(id) {
 }
 
 
+
 function templatePokemonDetailCard(id) {
   id = id - 1
 
   console.log("Alle Array == ", pokeArraysingle);
   console.log("Alle Array selection == ", pokeSelection);
+  console.log("Search Array ==", pokeArraySearch)
+  console.log("NAme über hundert ", pokeArraySearch[1].name);
+
+
   return `
   <div class="detail_Card_Header">
         <spam>${pokeArraysingle[id].name}</spam>
@@ -275,23 +283,40 @@ function templatePokemonDetailCard(id) {
 
 function pokeCardDeback(id) {
   if (id > 0) {
-
     renderPokemonDetailCard(id);
   } else {
-    return
+    id = pokeIndexAkt;
+    renderPokemonDetailCard(id);
   }
 }
 
+
 function pokeCardDeforward(id) {
   if ((id + 1) == pokeIndexAkt) {
-    //pokeNextSelection();
-    console.log("Es m uss nachelfaen webdseb !!!")
-    //closeDetailCard();
-
-
+    id = 1;
+    renderPokemonDetailCard(id);
   } else {
     renderPokemonDetailCard(id + 2);
   }
 }
-//console.log("ID == ", id)
-//console.log("MAXId ==", pokeIndexAkt);
+
+
+
+function searchMode() {
+  document.getElementById = 'pCard'.style.pointerEvents = 'none';
+}
+
+
+function eventListener() {
+  document.getElementById('searchField').addEventListener("input", function (event) {
+    if (event.target.value === "") {
+      document.getElementById('poketCard').innerHTML = "";
+      let poketIDs = [];
+      for (let i = 1; i <= pokeIndexAkt; i++) {
+        poketIDs.push(i);
+      }
+      loadPokeSelect(poketIDs);
+      document.getElementById('btnnext').style.display = 'flex';
+    }
+  });
+}

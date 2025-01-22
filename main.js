@@ -1,24 +1,20 @@
 let basisUrl = "https://pokeapi.co/api/v2/pokemon?limit=10000&offset=0";
 let pokeFirstURL = "https://pokeapi.co/api/v2/pokemon/"
-
-
 let pokeArrayAll = [];
 let pokeArraysingle = [];
 let SeachArray = [];
-let serachID = [];
 let pokeArraySearch = [];
-
 let pokemonsLoad = 24;
 let pokeLoadMax = 0;
 let pokeIndexAkt = 0;
+let pokeNumberCards = 0;
 let pokeSelection = [];
 let pokeSearchMode = false;
-
 let colorCardList =
 {
   grass: "#78C850",
   fire: "#F08030",
-  wate: "#6890F0",
+  water: "#6890F0",
   bug: "#A8B820",
   normal: "#A8A878",
   poison: "#A040A0",
@@ -48,67 +44,55 @@ function init() {
 async function loadAPIAllIndex() {
   let responeAllpoke = await fetch(basisUrl);
   pokeArrayAll = (await responeAllpoke.json());
-  console.log("AllPoket ", pokeArrayAll);
 }
 
 
 function searchPokemon() {
+  let pokeSearch = "";
+  let resultPokeSearch = [];
+  let id = 0;
   let searchString = document.getElementById('searchField').value.trim();
-  if (searchString.length < 3) {
+  if (searchString.length <= 2) {
     return;
   }
   document.getElementById('btnnext').style.display = 'none';
-  let resultPokeSearch = [];
-  let pokeSearch = pokeArrayAll.results.filter(p => p.name.toLowerCase().startsWith(searchString.toLowerCase()));
+  pokeSearch = pokeArrayAll.results.filter(p => p.name.toLowerCase().startsWith(searchString.toLowerCase()));
   pokeSearch.map(p => {
-    let id = p.url.split("/").filter(part => part).pop();
+    id = p.url.split("/").filter(part => part).pop();
     resultPokeSearch.push(id);
   });
-
-  serachID = resultPokeSearch;
-  console.log("Gefunden Arra", pokeSearch);
-  console.log("Result ", resultPokeSearch);
   document.getElementById('poketCard').innerHTML = "";
-
   loadPokeSelect(resultPokeSearch, true);
 }
 
 
 function pokeNextSelection() {
+  document.getElementById('btnnext').style.display = 'none';
   pokeSelection = [];
   let pokeIndexOld = pokeIndexAkt;
   pokeLoadMax = pokeLoadMax + pokemonsLoad;
   pokeIndexAkt = pokeIndexAkt + pokemonsLoad;
-  console.log("IndexAktuell", pokeIndexAkt);
-  console.log("polemonmax", pokeLoadMax);
   for (i = pokeIndexOld; i < pokeLoadMax; i++) {
     pokeSelection.push(i + 1);
   }
-  console.log("pokeSelection == ", pokeSelection);
   document.getElementById('poketCard').innerHTML = "";
   loadPokeSelect(pokeSelection);
-  document.getElementById('btnnext').style.display = 'flex';
 }
 
 
 async function loadPokeSelect(pokeSelec, search) {
   loader(true);
   try {
-
-    console.log("PoketSelect ==  ", pokeSelec);
-
-    const pokets = pokeSelec.map(id => `${pokeFirstURL}${id}`);
+    let pokets = pokeSelec.map(id => `${pokeFirstURL}${id}`);
     let fetchPromis = pokets.map(singleURL => fetch(singleURL).then(Poketresponse => {
       return Poketresponse.json();
     }));
+
     let ArrayRead = await Promise.all(fetchPromis)
+
     if (search) {
       pokeSearchMode = true;
       SeachArray = ArrayRead;
-      //console.log("Search Ids ", ResultpokeSearch);
-
-      console.log("Such ARRAY ", SeachArray);
-
       renderPokeCard(ArrayRead); //serach Id
     } else {
       pokeSearchMode = false;
@@ -121,19 +105,34 @@ async function loadPokeSelect(pokeSelec, search) {
   }
 }
 
-
 function renderPokeCard(poketList) {
-  let i = -1;
+  pokeNumberCards = 0;
+  let i = 0;
   let element = document.getElementById('poketCard');
+  if (pokeSearchMode) {
+    element.innerHTML = "";
+  }
   poketList.map(pokemon => {
-    i++;
-    let img = pokeArraysingle[i].sprites.other.home.front_default;
+    let img = poketList[i].sprites.other.home.front_default;
     let pokType = typeCheck(pokemon);
     let colorCard = colorCardCheck(pokType[0]);
     element.innerHTML += templatePokeCard(pokemon, img, pokType, colorCard, i);
+    i++;
+    pokeNumberCards++;
   })
   document.getElementById('btnnext').classList.remove('d-none');
   loader(false);
+  scrollToCard(i);
+
+}
+
+
+function scrollToCard(i) {
+  let card = document.getElementById(i - 24);
+  const cardPosition = card.getBoundingClientRect().top + window.scrollY;
+  window.scrollTo({
+    top: cardPosition - 100
+  });
 }
 
 
@@ -155,35 +154,36 @@ function colorCardCheck(type) {
 
 
 function templatePokeCard(Poklist, img, typ, color, index) {
-  console.log("Index bei Template ", index);
-
   if (pokeSearchMode) {
+    document.getElementById('btnnext').style.display = 'none';
     id = index + 1;
   } else {
+    document.getElementById('btnnext').style.display = 'flex';
     id = Poklist.id;
   }
+
+
   return `
-  <div  class="col">
+ <div id="${id}" class="col text-center">
     <div id="pCard" class="pCard" style="background-color: ${color};" onclick="pokeInfoDetail(${id})">
       <div class="pCard_body"></div>
       <p class="pCard_name">${Poklist.name}</p>
       <img id="pCard_img" class="pCard_img" src="${img}">
         <span class="pCard_Id">${Poklist.id}</span>
-        <div  class="pCard_buttons">
-        <span id="test" class="pCard_btn">${typ[0]}</span>
-        <span style="display:${typ[1]}" id="test1" class="pCard_btn">${typ[1]}</span>
+        <div class="pCard_buttons">
+          <span id="test" class="pCard_btn">${typ[0]}</span>
+          <span style="display:${typ[1]}" id="test1" class="pCard_btn">${typ[1]}</span>
         </div>
-       </div>
-  </div>
-`
+    </div>
+    </div>
+ `
 }
 
+
 function pokeInfoDetail(id) {
-  console.log("Card mit Nummer ", id);
   noneOrflexDisplay([{ "lockoutDisplay": "flex" }, { "detailCard": "flex" }])
   document.getElementById('body').style.overflow = 'hidden';
   renderPokemonDetailCard(id);
-
 }
 
 
@@ -197,13 +197,10 @@ function loader(aktiv) {
   let element = document.getElementById('loader');
   if (aktiv) {
     element.style.display = "flex";
-    console.log("Loader aktiv");
   } else {
     element.style.display = "none";
-    console.log("Loader deaktivirt");
   }
 }
-
 
 
 function noneOrflexDisplay(element = []) {
@@ -221,45 +218,63 @@ function renderPokemonDetailCard(id) {
 }
 
 
-
 function templatePokemonDetailCard(id) {
-  console.log("Detail Caed Id ", id);
   id = id - 1
   let pokeArray = [];
-
-
   if (pokeSearchMode) {
     pokeArray = SeachArray;
-    console.log(SeachArray);
-
-
   } else {
-    pokeArray = pokeArraysingle
+    pokeArray = pokeArraysingle;
   }
-
-
-
+  let colorCard = ColorDetailCard(pokeArray, id);
   return `
-  <div class="detail_Card_Header">
+  <div style="background-color: ${colorCard}; border-radius:8px;">
+  <div class="detail_Card_Header" >
         <spam>${pokeArray[id].name}</spam>
         <img class="img_Pokemon" src="${pokeArray[id].sprites.other.home.front_default}">
         <img onclick="closeDetailCard()" class="close_Button" src="./assets/close.svg">
       </div>
       <hr>
       <div class="detail_Card_Menu">
-        <a href="#">About</a>
-        <a href="#">Base Stats</a>
+        <a href="#!" id="btnAbout" class="btn_About btn_About_aktiv" onclick="tabAbout()">About</a>
+        <a href="#!" id="btnBase"  class="btn_Base btn_Base_aktiv"  onclick="tabBaseStats()">Base Stats</a>
+        <p class="poke_Detail_ID">${pokeArray[id].id}</p>
       </div>
       <div class="detail_Card_Infos">
-        <div class="Card_Detail_About">
-        </div>
-        <div class="Card_Detail_BaseStats">
-          <div class="progress_Bar">
+
+      <div class="">
+           <div id="about" class="Card_Detail_About">
+            <table class="Tab_about">
+              <tbody>
+                <tr>
+                  <td class="td1">Height</td>
+                  <td>${(pokeArray[id].height) * 10} cm</td>
+                </tr>
+                <tr>
+                  <td class="td1">Weight</td>
+                  <td>${(pokeArray[id].weight) / 10} kg</td>
+                </tr>
+                 <tr>
+                  <td class="td1">Experience</td>
+                  <td>${pokeArray[id].base_experience}</td>
+                </tr>
+                 </tr>
+                 <tr>
+                  <td class="td1">Abilities</td>
+                  <td>${abilitiesRead(id, pokeArray)}</td>
+                </tr>
+              </tbody>
+            </table>
+           </div>
+
+
+          <div id="baseStats" class="Card_Detail_BaseStats">
             <table>
               <tbody>
                 <tr>
                   <td>hp</td>
-                  <td>${pokeArray[id].stats[0].base_stat}</td>
+                  <td>${pokeArray[id].stats[0].base_stat}  </td>
+                   <td><progress id="progress" value="70" max="100"></progress>  </td>
                 </tr>
                 <tr>
                   <td>attack</td>
@@ -284,17 +299,30 @@ function templatePokemonDetailCard(id) {
                   <td>${pokeArray[id].stats[5].base_stat}</td>
                 </tr>
               </tbody>
-            </table>
+             </table>
           </div>
-        </div>
+
+
+
+
+     </div>
+<hr>
+          <p>ggg</p>
       </div>
-      <hr>
+      <br>
       <div class="detail_Card_footer">
         <img id="btnback" class="btn_DeCard" src="./assets/back.svg" onclick="pokeCardDeback(${id})">
         <img id="btnforward" class="btn_DeCard" src="./assets/forward.svg" onclick="pokeCardDeforward(${id})">
       </div>
+</div>
       `
+}
 
+
+function ColorDetailCard(pokeArray, id) {
+  let element = pokeArray[id].types[0].type.name;
+  console.log("Color ", element);
+  return colorCardList[element];
 
 }
 
@@ -303,21 +331,19 @@ function pokeCardDeback(id) {
   if (id > 0) {
     renderPokemonDetailCard(id);
   } else {
-    id = pokeIndexAkt;
+    id = pokeNumberCards;
     renderPokemonDetailCard(id);
   }
 }
 
-
 function pokeCardDeforward(id) {
-  if ((id + 1) == pokeIndexAkt) {
+  if ((id + 1) == pokeNumberCards) {
     id = 1;
     renderPokemonDetailCard(id);
   } else {
     renderPokemonDetailCard(id + 2);
   }
 }
-
 
 
 function searchMode() {
@@ -333,8 +359,36 @@ function eventListener() {
       for (let i = 1; i <= pokeIndexAkt; i++) {
         poketIDs.push(i);
       }
-      loadPokeSelect(poketIDs);
+      pokeSearchMode = false;
+      renderPokeCard(pokeArraysingle);
+      console.log("PoketID ", poketIDs)
       document.getElementById('btnnext').style.display = 'flex';
     }
   });
+}
+
+
+function abilitiesRead(id, pokArrayAktiv) {
+  let PoketAabilities = "";
+  let returnString = "";
+  for (i = 0; i < pokArrayAktiv[id].abilities.length; i++) {
+    PoketAabilities = pokArrayAktiv[id].abilities[i].ability.name.charAt(0).toUpperCase() + pokArrayAktiv[id].abilities[i].ability.name.slice(1);
+    returnString = returnString + PoketAabilities + "<br>";
+  }
+  return returnString;
+}
+
+
+function tabAbout() {
+  document.getElementById('btnAbout').classList.add("btn_About_aktiv", "Card_Detail_About");
+  document.getElementById('btnBase').classList.remove("btn_Base_aktiv");
+  document.getElementById('about').style.display = "flex";
+  document.getElementById('baseStats').style.display = 'none';
+}
+
+function tabBaseStats() {
+  document.getElementById('btnBase').classList.add("btn_Base_aktiv");
+  document.getElementById('btnAbout').classList.remove("btn_About_aktiv");
+  document.getElementById('baseStats').style.display = 'flex';
+  document.getElementById('about').style.display = "none";
 }

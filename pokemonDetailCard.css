@@ -11,10 +11,10 @@
   display: none;
   flex-direction: column;
   position: fixed;
-  top: 50%;
+  top: 35%;
   left: 50%;
   width: 320px;
-  height: 600px;
+  height: 300px;
   border-radius: 10px;
   z-index: 11;
   animation: Detail_Card 0.5s ease-out forwards;
@@ -71,7 +71,7 @@
 .detail_Card_Infos {
   width: 310px;
   background-color: bisque;
-  height: 400px;
+  height: 250px;
   padding: 10px;
   margin-left: 5px;
   margin-right: 5px;

@@ -13,7 +13,6 @@
   height: 100px;
   background-color: #f8f9fa;
   z-index: 4;
-
 }
 
 
@@ -57,7 +56,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
 .text-center {
@@ -98,16 +96,31 @@ footer {
   margin-right: 30px;
 }
 
+.row {
+  margin-top: 0px;
+}
+
 
 @media (max-width: 460px) {
   .container {
     display: flex;
     flex-direction: column;
     justify-content: center;
+
   }
 
   .form-control {
     margin-top: 10px;
     margin-right: 0;
   }
+
+  .navbar {
+    height: 180px;
+  }
+
+  .row {
+    margin-top: 50px;
+  }
+
+
 }

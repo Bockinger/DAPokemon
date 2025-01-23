@@ -122,18 +122,8 @@ function renderPokeCard(poketList) {
   })
   document.getElementById('btnnext').classList.remove('d-none');
   loader(false);
-  scrollToCard(i);
-
 }
 
-
-function scrollToCard(i) {
-  let card = document.getElementById(i - 24);
-  const cardPosition = card.getBoundingClientRect().top + window.scrollY;
-  window.scrollTo({
-    top: cardPosition - 100
-  });
-}
 
 
 function typeCheck(Poklist) {
@@ -215,6 +205,7 @@ function renderPokemonDetailCard(id) {
   let element = document.getElementById('detailCard');
   element.innerHTML = "";
   element.innerHTML = templatePokemonDetailCard(id);
+  tabAbout();
 }
 
 
@@ -269,34 +260,39 @@ function templatePokemonDetailCard(id) {
 
 
           <div id="baseStats" class="Card_Detail_BaseStats">
-            <table>
+            <table class="tab_basestate">
               <tbody>
                 <tr>
-                  <td>hp</td>
-                  <td>${pokeArray[id].stats[0].base_stat}  </td>
-                   <td><progress id="progress" value="70" max="100"></progress>  </td>
+                  <td class="td1b">hp</td>
+                  <td class="td2b">${pokeArray[id].stats[0].base_stat}  </td>
+                   <td class"td3b><progress id="progress" class="progress" value="70" max="100"></progress>  </td>
                 </tr>
                 <tr>
-                  <td>attack</td>
+                  <td class="td1">attack</td>
                   <td>${pokeArray[id].stats[1].base_stat}</td>
+                  <td><progress id="progress" value="70" max="100"></progress>  </td>
                 </tr>
                  <tr>
-                  <td>defense</td>
+                  <td  class="td1">defense</td>
                   <td>${pokeArray[id].stats[2].base_stat}</td>
+                  <td><progress id="progress" value="70" max="100"></progress>  </td>
                 </tr>
 
                  <tr>
-                  <td>special-attack</td>
+                  <td  class="td1">special-attack</td>
                   <td>${pokeArray[id].stats[3].base_stat}</td>
+                  <td><progress id="progress" value="70" max="100"></progress>  </td>
                 </tr>
 
                  <tr>
-                  <td>special-defense</td>
+                  <td  class="td1">special-defense</td>
                   <td>${pokeArray[id].stats[4].base_stat}</td>
+                   <td><progress id="progress" value="70" max="100"></progress>  </td>
                 </tr>
                  <tr>
-                  <td>speed</td>
+                  <td  class="td1">speed</td>
                   <td>${pokeArray[id].stats[5].base_stat}</td>
+                   <td><progress id="progress" value="70" max="100"></progress>  </td>
                 </tr>
               </tbody>
              </table>
@@ -307,8 +303,7 @@ function templatePokemonDetailCard(id) {
 
      </div>
 <hr>
-          <p>ggg</p>
-      </div>
+                </div>
       <br>
       <div class="detail_Card_footer">
         <img id="btnback" class="btn_DeCard" src="./assets/back.svg" onclick="pokeCardDeback(${id})">

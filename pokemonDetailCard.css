@@ -122,15 +122,37 @@
   display: none;
 }
 
-.Tab_about td {
+.tab_about td {
   width: 200px;
-  padding-top: 10px;
+  padding-top: 20px;
   vertical-align: top;
 }
 
 .td1 {
   font-weight: bold;
 }
+
+
+.tab_basestate td {
+  width: 100%;
+  padding-top: 5px;
+  vertical-align: top;
+
+}
+
+
+
+
+
+
+
+.progress {
+  width: 100px;
+}
+
+
+
+
 
 .btn_About,
 .btn_Base {
@@ -150,6 +172,7 @@
 .btn_Base:hover {
   background-color: rgba(255, 203, 5, 0.5);
 }
+
 
 
 .btn_About_aktiv {

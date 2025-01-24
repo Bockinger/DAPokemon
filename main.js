@@ -38,6 +38,7 @@ function init() {
   eventListener();
   loadAPIAllIndex();
   pokeNextSelection();
+
 }
 
 
@@ -62,6 +63,8 @@ function searchPokemon() {
     resultPokeSearch.push(id);
   });
   document.getElementById('poketCard').innerHTML = "";
+
+
   loadPokeSelect(resultPokeSearch, true);
 }
 
@@ -76,41 +79,49 @@ function pokeNextSelection() {
     pokeSelection.push(i + 1);
   }
   document.getElementById('poketCard').innerHTML = "";
-  loadPokeSelect(pokeSelection);
+  loadPokeSelect(pokeSelection, false);
+
 }
 
 
 async function loadPokeSelect(pokeSelec, search) {
-  loader(true);
   try {
+    loader(true);
     let pokets = pokeSelec.map(id => `${pokeFirstURL}${id}`);
     let fetchPromis = pokets.map(singleURL => fetch(singleURL).then(Poketresponse => {
       return Poketresponse.json();
     }));
-
     let ArrayRead = await Promise.all(fetchPromis)
-
-    if (search) {
-      pokeSearchMode = true;
-      SeachArray = ArrayRead;
-      renderPokeCard(ArrayRead); //serach Id
-    } else {
-      pokeSearchMode = false;
-      let oldArray = pokeArraysingle
-      pokeArraysingle = oldArray.concat(ArrayRead);
-      renderPokeCard(pokeArraysingle);
-    }
-  } catch {
+    renderPokeCard(poketSearchStatus(ArrayRead, search), search);
+  }
+  catch {
     console.log("Fehler beim abrufen der Daten !!!");
   }
 }
 
-function renderPokeCard(poketList) {
+
+function poketSearchStatus(ArrayRead, search) {
+  if (search) {
+    pokeSearchMode = true;
+    SeachArray = ArrayRead;
+    return ArrayRead;
+  } else {
+    pokeSearchMode = false;
+    let oldArray = pokeArraysingle
+    pokeArraysingle = oldArray.concat(ArrayRead);
+    return pokeArraysingle;
+  }
+}
+
+
+function renderPokeCard(poketList, search) {
   pokeNumberCards = 0;
   let i = 0;
   let element = document.getElementById('poketCard');
   if (pokeSearchMode) {
     element.innerHTML = "";
+    document.getElementById('btnReturn').classList.remove('d-none');
+    document.getElementById('btnReturn').style.display = "flex";
   }
   poketList.map(pokemon => {
     let img = poketList[i].sprites.other.home.front_default;
@@ -122,6 +133,21 @@ function renderPokeCard(poketList) {
   })
   document.getElementById('btnnext').classList.remove('d-none');
   loader(false);
+  scrollToCard(i, search);
+}
+
+
+
+
+
+function scrollToCard(i, search) {
+  if (!search) {
+    let card = document.getElementById(i - 23);
+    const cardPosition = card.getBoundingClientRect().top + window.scrollY;
+    window.scrollTo({
+      top: cardPosition - 60
+    });
+  }
 }
 
 
@@ -151,8 +177,6 @@ function templatePokeCard(Poklist, img, typ, color, index) {
     document.getElementById('btnnext').style.display = 'flex';
     id = Poklist.id;
   }
-
-
   return `
  <div id="${id}" class="col text-center">
     <div id="pCard" class="pCard" style="background-color: ${color};" onclick="pokeInfoDetail(${id})">
@@ -298,9 +322,6 @@ function templatePokemonDetailCard(id) {
              </table>
           </div>
 
-
-
-
      </div>
 <hr>
                 </div>
@@ -331,6 +352,7 @@ function pokeCardDeback(id) {
   }
 }
 
+
 function pokeCardDeforward(id) {
   if ((id + 1) == pokeNumberCards) {
     id = 1;
@@ -349,18 +371,25 @@ function searchMode() {
 function eventListener() {
   document.getElementById('searchField').addEventListener("input", function (event) {
     if (event.target.value === "") {
-      document.getElementById('poketCard').innerHTML = "";
-      let poketIDs = [];
-      for (let i = 1; i <= pokeIndexAkt; i++) {
-        poketIDs.push(i);
-      }
-      pokeSearchMode = false;
-      renderPokeCard(pokeArraysingle);
-      console.log("PoketID ", poketIDs)
-      document.getElementById('btnnext').style.display = 'flex';
+      searchExit();
     }
   });
 }
+
+
+function searchExit() {
+  document.getElementById('poketCard').innerHTML = "";
+  let poketIDs = [];
+  for (let i = 1; i <= pokeIndexAkt; i++) {
+    poketIDs.push(i);
+  }
+  document.getElementById('searchField').value = "";
+  pokeSearchMode = false;
+  renderPokeCard(pokeArraysingle);
+  document.getElementById('btnnext').style.display = 'flex';
+  document.getElementById('btnReturn').style.display = 'none';
+}
+
 
 
 function abilitiesRead(id, pokArrayAktiv) {

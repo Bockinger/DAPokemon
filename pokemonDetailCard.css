@@ -133,15 +133,20 @@
 }
 
 
-.tab_basestate td {
-  width: 100%;
-  padding-top: 5px;
-  vertical-align: top;
 
+.tab_basestate {
+  border-collapse: separate;
+  border-spacing: 10px 0;
+  width: 100%;
 }
 
 
 
+.tab_basestate td {
+  width: 100%;
+  padding-top: 5px;
+  vertical-align: top;
+}
 
 
 
@@ -149,7 +154,6 @@
 .progress {
   width: 100px;
 }
-
 
 
 

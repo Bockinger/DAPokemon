@@ -7,8 +7,6 @@
   scroll-behavior: smooth;
 }
 
-
-
 .navbar {
   height: 100px;
   background-color: #f8f9fa;
@@ -58,12 +56,12 @@
   align-items: center;
 }
 
+
 .text-center {
   display: flex;
   justify-content: center;
-
-
 }
+
 
 footer {
   width: 100%;

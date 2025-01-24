@@ -133,7 +133,6 @@
 }
 
 
-
 .tab_basestate {
   border-collapse: separate;
   border-spacing: 10px 0;
@@ -141,18 +140,17 @@
 }
 
 
-
 .tab_basestate td {
   width: 100%;
   padding-top: 5px;
-  vertical-align: top;
+  vertical-align: middle;
 }
-
-
 
 
 .progress {
   width: 100px;
+  height: 5px;
+  background-color: grey;
 }
 
 
@@ -172,11 +170,11 @@
   background-color: bisque;
 }
 
+
 .btn_About:hover,
 .btn_Base:hover {
   background-color: rgba(255, 203, 5, 0.5);
 }
-
 
 
 .btn_About_aktiv {
@@ -184,6 +182,7 @@
   border-color: #ffcb05;
   border-style: solid;
 }
+
 
 .Card_Detail_About {
   display: flex;
@@ -199,7 +198,6 @@
 .Card_Detail_BaseStats {
   display: none;
 }
-
 
 
 @keyframes Detail_Card {

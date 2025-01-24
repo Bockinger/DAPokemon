@@ -137,9 +137,6 @@ function renderPokeCard(poketList, search) {
 }
 
 
-
-
-
 function scrollToCard(i, search) {
   if (!search) {
     let card = document.getElementById(i - 23);
@@ -149,7 +146,6 @@ function scrollToCard(i, search) {
     });
   }
 }
-
 
 
 function typeCheck(Poklist) {
@@ -287,43 +283,65 @@ function templatePokemonDetailCard(id) {
             <table class="tab_basestate">
               <tbody>
                 <tr>
-                  <td class="td1b">hp</td>
-                  <td class="td2b">${pokeArray[id].stats[0].base_stat}  </td>
-                   <td class"td3b><progress id="progress" class="progress" value="70" max="100"></progress>  </td>
+                  <td class="td1">hp</td>
+                  <td>${pokeArray[id].stats[0].base_stat}</td>
+                   <td>
+                        <div class=progress>
+                         <div style="background-color:${ColorProgressbar(id, pokeArray[id].stats[0].base_stat)}; width:${pokeArray[id].stats[0].base_stat}px;" ></div>
+                        </div>
+                   </td>
                 </tr>
                 <tr>
                   <td class="td1">attack</td>
                   <td>${pokeArray[id].stats[1].base_stat}</td>
-                  <td><progress id="progress" value="70" max="100"></progress>  </td>
+                        <td class"td3b>
+                        <div  class=progress>
+                        <div style="background-color:${ColorProgressbar(id, pokeArray[id].stats[1].base_stat)}; width:${pokeArray[id].stats[1].base_stat}px;" ></div>
+                        </div>
+                   </td>
                 </tr>
                  <tr>
                   <td  class="td1">defense</td>
                   <td>${pokeArray[id].stats[2].base_stat}</td>
-                  <td><progress id="progress" value="70" max="100"></progress>  </td>
+                  <td>
+                        <div  class=progress>
+                        <div style="background-color:${ColorProgressbar(id, pokeArray[id].stats[2].base_stat)}; width:${pokeArray[id].stats[2].base_stat}px;" ></div>
+                        </div>
+                   </td>
                 </tr>
 
                  <tr>
                   <td  class="td1">special-attack</td>
                   <td>${pokeArray[id].stats[3].base_stat}</td>
-                  <td><progress id="progress" value="70" max="100"></progress>  </td>
+                  <td>
+                        <div  class=progress>
+                        <div style="background-color:${ColorProgressbar(id, pokeArray[id].stats[3].base_stat)}; width:${pokeArray[id].stats[3].base_stat}px;" ></div>
+                        </div>
+                   </td>
                 </tr>
 
                  <tr>
                   <td  class="td1">special-defense</td>
                   <td>${pokeArray[id].stats[4].base_stat}</td>
-                   <td><progress id="progress" value="70" max="100"></progress>  </td>
+                    <td>
+                        <div  class=progress>
+                        <div style="background-color:${ColorProgressbar(id, pokeArray[id].stats[4].base_stat)}; width:${pokeArray[id].stats[4].base_stat}px;" ></div>
+                        </div>
+                   </td>
                 </tr>
                  <tr>
                   <td  class="td1">speed</td>
                   <td>${pokeArray[id].stats[5].base_stat}</td>
-                   <td><progress id="progress" value="70" max="100"></progress>  </td>
+                  <td>
+                        <div  class=progress>
+                        <div style="background-color:${ColorProgressbar(id, pokeArray[id].stats[5].base_stat)}; width:${pokeArray[id].stats[5].base_stat}px;" ></div>
+                        </div>
+                   </td>
                 </tr>
               </tbody>
              </table>
-          </div>
-
-     </div>
-<hr>
+          </div>     </div>
+              <hr>
                 </div>
       <br>
       <div class="detail_Card_footer">
@@ -334,12 +352,15 @@ function templatePokemonDetailCard(id) {
       `
 }
 
+function ColorProgressbar(id, number) {
+  console.log("Number ", number);
+  return color = number >= 51 ? "green" : "red";
+}
+
 
 function ColorDetailCard(pokeArray, id) {
   let element = pokeArray[id].types[0].type.name;
-  console.log("Color ", element);
   return colorCardList[element];
-
 }
 
 

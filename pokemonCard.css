@@ -42,10 +42,7 @@
 
 .pCard_img:hover {
   transform: rotateY(180deg);
-
-  /* Drehung um 360 Grad */
 }
-
 
 
 .pCard_Id {
@@ -60,6 +57,7 @@
   margin-bottom: 20px;
   border-radius: 16px
 }
+
 
 .pCard_buttons {
   display: flex;
@@ -78,8 +76,6 @@
   border-radius: 8px;
   background-color: #ffcb05;
 }
-
-
 
 
 table td {

@@ -7,19 +7,17 @@
   <title>Pokedex</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="icon" type="image/x-icon" href="/assets/favicon.png">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="pokemonCard.css">
   <link rel="stylesheet" href="pokemonDetailCard.css">
   <link rel="stylesheet" href="fonts.css">
   <script src="main.js"></script>
-
 </head>
 
 <body id="body" onload="init()">
   <div id="detailCard" class="Detail_Card"></div>
-
   <div onclick="closeDetailCard()" id="lockoutDisplay" class="lockout_Display"></div>
-
   <nav class="navbar bg-body-tertiary fixed-top">
     <div class="container text-center">
       <img class="icon_Poke" src="assets/PokemonNav.svg" width="200" height="75">
@@ -29,7 +27,6 @@
       </form>
     </div>
   </nav>
-
   <span id="loader" class="loader"></span>
   <div class="container container_Card">
     <div id="poketCard" class="row"></div>
@@ -38,22 +35,15 @@
         <button id="btnnext" type="button" class="btn btn-warning mt-3 mb-3 d-none" style="width: 200px;"
           onclick="pokeNextSelection()">Next Pokemon</button>
       </div>
-
-
       <div class="text-center mt-5  ">
         <button id="btnReturn" type="button" class="btn btn-warning mt-3 mb-3 d-none  " style="width: 200px;"
           onclick="searchExit()">Search Exit</button>
       </div>
-
-
     </footer>
   </div>
-
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-
 </body>
 
 </html>

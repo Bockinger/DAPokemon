@@ -38,7 +38,6 @@ function init() {
   eventListener();
   loadAPIAllIndex();
   pokeNextSelection();
-
 }
 
 
@@ -63,8 +62,6 @@ function searchPokemon() {
     resultPokeSearch.push(id);
   });
   document.getElementById('poketCard').innerHTML = "";
-
-
   loadPokeSelect(resultPokeSearch, true);
 }
 
@@ -80,7 +77,6 @@ function pokeNextSelection() {
   }
   document.getElementById('poketCard').innerHTML = "";
   loadPokeSelect(pokeSelection, false);
-
 }
 
 
@@ -115,14 +111,19 @@ function poketSearchStatus(ArrayRead, search) {
 
 
 function renderPokeCard(poketList, search) {
-  pokeNumberCards = 0;
-  let i = 0;
   let element = document.getElementById('poketCard');
   if (pokeSearchMode) {
     element.innerHTML = "";
     document.getElementById('btnReturn').classList.remove('d-none');
     document.getElementById('btnReturn').style.display = "flex";
   }
+  poketListMap(poketList, search, element);
+}
+
+
+function poketListMap(poketList, search, element) {
+  let i = 0;
+  pokeNumberCards = 0;
   poketList.map(pokemon => {
     let img = poketList[i].sprites.other.home.front_default;
     let pokType = typeCheck(pokemon);
@@ -135,6 +136,7 @@ function renderPokeCard(poketList, search) {
   loader(false);
   scrollToCard(i, search);
 }
+
 
 
 function scrollToCard(i, search) {
@@ -353,7 +355,6 @@ function templatePokemonDetailCard(id) {
 }
 
 function ColorProgressbar(id, number) {
-  console.log("Number ", number);
   return color = number >= 51 ? "green" : "red";
 }
 
